@@ -2,5 +2,5 @@
   <%= form_for @user, url: {action: "create"} do |f| %>
     <%= f.label :usernae, 'username' %><br>
     <div><%= f.text_field :usernae, placeholder: "Your Username"%><br></div>
-    <%= f.submit "Submit" %>
+    <%= f.submit "Log In" %>
   <% end %>

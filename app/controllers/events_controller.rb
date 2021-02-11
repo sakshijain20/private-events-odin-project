@@ -22,8 +22,8 @@ class EventsController < ApplicationController
 
   # POST /events or /events.json
   def create
-    @event = Event.new(event_params)
-
+    @event = User.find(session[:current_user_id]).created_events.build(event_params)
+    
     respond_to do |format|
       if @event.save
         format.html { redirect_to @event, notice: "Event was successfully created." }
@@ -54,6 +54,17 @@ class EventsController < ApplicationController
     respond_to do |format|
       format.html { redirect_to events_url, notice: "Event was successfully destroyed." }
       format.json { head :no_content }
+    end
+  end
+
+  
+  def event_attendance
+    @event = Event.find(params[:id])
+    if @event.attendees.include?(current_user)
+      redirect_to @event, notice: "You are already on the list"
+    else
+      @event.attendees << current_user
+      redirect_to @event
     end
   end
 

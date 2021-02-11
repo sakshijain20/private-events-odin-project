@@ -1,19 +1,43 @@
 <p id="notice"><%= notice %></p>
 
 <p>
-  <strong>Title:</strong>
-  <%= @event.title %>
-</p>
-
-<p>
-  <strong>Event agenda:</strong>
+  <strong>Event Agenda:</strong>
   <%= @event.event_agenda %>
 </p>
 
 <p>
-  <strong>Event date:</strong>
-  <%= @event.event_date %>
+  <strong>Event creator:</strong>
+  <%= @event.creator_id %>
 </p>
+
+
+<% if user_signed_in? %>
+  <div class="col-md-2">
+    <% if @event.creator == current_user %>
+      <span class="float-right text-info">Hosting  <i class="fa fa-check"></i></span>
+    <% elsif @event.attendees.include?(current_user) %>
+      <span class="float-right text-success">Attending  <i class="fa fa-check"></i></span> 
+    <% else %>
+      <%= link_to 'attend', event_attendance_event_path, class: "btn btn-primary" unless @event.date_time < Time.now %>
+    <% end %>
+  </div>
+<% end %>
+
+
+<p class=" text-muted mb-4">ATTENDEES</p>
+
+<% if @event.attendees.empty? %>
+<div class="list-group">
+  <li class="list-group-item text-muted">This event has no attendees yet</li>
+</div>
+<% else %>
+  <div class="list-group">
+    <% @event.attendees.each do |attendee| %>
+    <li class="list-group-item"> <%= attendee.name %> </li>
+    <% end %>
+  </div>
+<% end %>
+
 
 <%= link_to 'Edit', edit_event_path(@event) %> |
 <%= link_to 'Back', events_path %>
