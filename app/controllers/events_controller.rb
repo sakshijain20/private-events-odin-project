@@ -1,5 +1,6 @@
 class EventsController < ApplicationController
   before_action :set_event, only: %i[ show edit update destroy ]
+  before_action :signed_in? ,except: [:index]
 
   # GET /events or /events.json
   def index
@@ -64,6 +65,13 @@ class EventsController < ApplicationController
 
     # Only allow a list of trusted parameters through.
     def event_params
-      params.require(:event).permit(:title, :event_agenda, :event_date)
+      params.require(:event).permit(:title, :event_agenda, :event_date,:creator_id)
     end
+
+    def signed_in?
+    unless User.exists?(id: session[:current_user_id])
+      redirect_to new_session_path, flash.now[:error] = "Please sign in to create new event!"
+    end
+  end
+
 end
